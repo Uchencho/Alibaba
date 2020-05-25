@@ -36,11 +36,18 @@ class ProductManager(models.Manager):
             return qs.first()
         return None
 
+    def get_by_slug(self, slug):
+        qs = self.get_queryset().filter(slug=slug) # Products.objects == self.get_queryset()
+        if qs.count() == 0:
+            return None
+        return qs.first()
+
     def featured(self):
         return self.get_queryset().filter(featured=True)
 
 class Product(models.Model):
     title           = models.CharField(max_length=50)
+    slug            = models.SlugField(default='abc', unique=True)
     description     = models.TextField()
     price           = models.DecimalField(decimal_places=2, max_digits=9, default=39.99)
     image           = models.ImageField(upload_to=upload_image_path, null=True, blank=True)
@@ -48,6 +55,9 @@ class Product(models.Model):
     active          = models.BooleanField(default=True)
 
     objects = ProductManager()
+
+    def get_absolute_url(self):
+        return f"/products/{self.slug}/"
 
     def __str__(self):
         return self.title
