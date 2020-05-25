@@ -15,7 +15,21 @@ def upload_image_path(instance, filename):
     new_filename = f'{random_int}{ext}'
     return f"products/{random_int}/{new_filename}" #Better to use f"products/{new_filename}"
 
+class ProductQuerySet(models.query.QuerySet):
+    #Creating a custom queryset
+    def active(self):
+        return self.filter(active=True)
+
 class ProductManager(models.Manager):
+    def get_queryset(self):
+        # Overwriting the custom queryset
+        return ProductQuerySet(self.model, using=self._db)
+
+    def all(self):
+        # This is so that whenever you call the .all(), it returns only active products
+        # You could decide to only use .active() the way we use .featured()
+        return self.get_queryset().active()
+
     def get_by_id(self, id):
         qs = self.get_queryset().filter(id=id) # Products.objects == self.get_queryset()
         if qs.count() == 1:
@@ -31,6 +45,7 @@ class Product(models.Model):
     price           = models.DecimalField(decimal_places=2, max_digits=9, default=39.99)
     image           = models.ImageField(upload_to=upload_image_path, null=True, blank=True)
     featured        = models.BooleanField(default=False)
+    active          = models.BooleanField(default=True)
 
     objects = ProductManager()
 
