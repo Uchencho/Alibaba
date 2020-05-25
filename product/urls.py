@@ -6,9 +6,9 @@ from .views import (ProductListView,
                     ProductFeaturedDetailView)
 
 urlpatterns = [
-    path('', ProductListView.as_view()),
-    path('featured/', ProductFeaturedListView.as_view()),
-    path('featured/<int:pk>/', ProductFeaturedDetailView.as_view()),
+    path('', ProductListView.as_view(), name='list'),
+    path('featured/', ProductFeaturedListView.as_view(), name='featured'),
+    path('featured/<int:pk>/', ProductFeaturedDetailView.as_view(), name='featured-detail'),
     # path('<int:pk>/', ProductDetailView.as_view()),
-    path('<slug:slug>/', ProductDetailView.as_view()),
+    path('<slug:slug>/', ProductDetailView.as_view(), name='detail'),
 ]

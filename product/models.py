@@ -1,5 +1,6 @@
 from django.db import models
 import random, os
+from django.urls import reverse
 
 def get_filename_ext(filepath):
     """
@@ -60,7 +61,7 @@ class Product(models.Model):
         """
         Returns the absolute url for a specific object
         """
-        return f"/product/{self.slug}/"
+        return reverse("product:detail", kwargs={"slug": self.slug})
 
     def __str__(self):
         return self.title
