@@ -1,10 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
 <h1>
     Product List
 </h1>
 
 {% for obj in object_list %}
 <li>
-    {{ obj.title }}
+    <a href="{{ obj.get_absolute_url }}">{{ obj.title }}</a>
 </li>
 <br/>
 {% endfor %}
+
+{% endblock %}  
